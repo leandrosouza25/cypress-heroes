@@ -1,12 +1,13 @@
-import { defineConfig } from "cypress";
-import { createHero, deleteHero } from './cypress/support/data';
+const { defineConfig } = require("cypress");
+const { createHero, deleteHero } = require("./cypress/support/data.cjs");
 
-export default defineConfig({
-  projectId: 'nd8nd1',
+module.exports = defineConfig({
+  projectId: "nd8nd1",
+
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: "http://localhost:3000",
     setupNodeEvents(on, config) {
-      on('task', {
+      on("task", {
         createHero,
         deleteHero,
       });
@@ -15,8 +16,8 @@ export default defineConfig({
 
   component: {
     devServer: {
-      framework: 'react',
-      bundler: 'vite',
+      framework: "react",
+      bundler: "vite",
     },
   },
 });

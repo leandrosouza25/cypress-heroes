@@ -1,12 +1,9 @@
-import {
-  Prisma,
-  PrismaClient,
-} from '@prisma/client';
+const { PrismaClient } = require('@prisma/client');
 
 const client = new PrismaClient();
 
-export async function createHero() {
-  const hero: Prisma.HeroCreateInput = {
+async function createHero() {
+  const hero = {
     name: 'Test Hero',
     price: 1,
     saves: 1,
@@ -15,17 +12,21 @@ export async function createHero() {
       connect: [{ id: 1 }],
     },
   };
+
   const createdHero = await client.hero.create({
     data: hero,
   });
-  createdHero.name = `${createdHero.name} ${createdHero.id}`;
+
   await client.hero.update({
     where: {
       id: createdHero.id,
     },
-    data: createdHero,
+    data: {
+      name: `${createdHero.name} ${createdHero.id}`,
+    },
   });
-  return client.hero.findUniqueOrThrow({
+
+  return client.hero.findUnique({
     where: {
       id: createdHero.id,
     },
@@ -40,15 +41,22 @@ export async function createHero() {
   });
 }
 
-export async function deleteHero(id: number) {
+async function deleteHero(id) {
   await client.avatarImage.deleteMany({
     where: {
       heroId: id,
     },
   });
-  return await client.hero.deleteMany({
+
+  return client.hero.deleteMany({
     where: {
       id,
     },
   });
 }
+
+module.exports = {
+  createHero,
+  deleteHero,
+};
+
